@@ -1,2 +1,2 @@
 # fifi-bot
-Discord bot
+Automated taco hemingway quotes for my beloved friend fifay
