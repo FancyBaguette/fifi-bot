@@ -1,0 +1,2 @@
+# fifi-bot
+Discord bot
