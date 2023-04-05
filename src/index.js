@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { Client, IntentsBitField, userMention } = require('discord.js');
 const cron = require('cron');
 
@@ -74,4 +75,4 @@ client.on('messageCreate', (message) => {
     }
 })
 
-client.login('MTA5MzI3OTYxNDQ2NzU5MjIxNQ.GQc3Xl.etfyj5j5Qx6N9Mi6Wz8ATZ1gvXyAGSS8vh8ig4')
+client.login(process.env.TOKEN)
