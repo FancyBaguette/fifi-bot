@@ -1,5 +1,5 @@
 # Librus Discord
-A Discord bot for displaying info from Librus Synergia using librus-api.
+A Discord bot for displaying info from Librus Synergia using librus-api. Currently it only supports displaying your account data.
 
 **Environment variables**
 
