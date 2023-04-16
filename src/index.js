@@ -21,12 +21,13 @@ client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand()) return
 
     if (interaction.commandName = "librus") {
+
         const login = interaction.options.get('login').value
         const password = interaction.options.get('password').value
         const option = interaction.options.get('option').value
 
         librusClient.authorize(login, password).then( async () => {
-            if (option === "account-data") {
+            if (option === "account-info") {
 
                 try {
                     const student = await librusClient.info.getAccountInfo()
@@ -40,26 +41,28 @@ client.on('interactionCreate', async (interaction) => {
                         .setColor(0xeb0d66)
                         .setTitle('Your data')
                         .addFields(
-                            {name: '👨‍🎓 Student data', value: `${uczen.student.nameSurname} \n ${uczen.student.class}`},
-                            {name: '🖥 Account data', value: `${uczen.account.nameSurname} \n ${uczen.account.login}`}
+                            {name: '👨‍🎓 Student data', value: `${student.student.nameSurname} \n ${student.student.class}`},
+                            {name: '🖥 Account data', value: `${student.account.nameSurname} \n ${student.account.login}`}
                         )
     
                     interaction.reply({embeds: [embed], ephemeral: true})
-                    /*
-                        These two variables need to be removed from the memory
-                        because otherwise if someone tries to log in with invalid
-                        data, they will receive info for the most recent valid login
-                    */
-                    delete login, password
+                    delete login
+                    delete password
                 } catch (err) {
                     interaction.reply({content: `An error has occured: ${err}`, ephemeral: true})
                 }
+
+                delete login
+                delete password
 
             } else if (option === 'announcement') {
 
                 try {
                     librusClient.inbox.listAnnouncements().then((data) => {
-                        console.log(data)
+                        if (typeof(data[0]) === undefined) {
+                            interaction.reply({content: '⚠ Invalid login or password', ephemeral: true})
+                            return
+                        }
                         interaction.reply(
                             {content: `
                             **${data[0].title}**
@@ -68,9 +71,12 @@ client.on('interactionCreate', async (interaction) => {
                             `, ephemeral: true}
                         )
                     })
+                    delete login, password
                 } catch (err) {
                     interaction.reply({content: `An error has occured: ${err}`, ephemeral: true})
                 }
+
+                delete login, password
 
             }
         })
