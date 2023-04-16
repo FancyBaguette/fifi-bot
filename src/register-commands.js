@@ -4,30 +4,34 @@ const { REST, Routes, ApplicationCommandOptionType } = require('discord.js')
 const commands = [
     {
         name: 'librus',
-        description: 'Wprowadź dane logowania oraz sprecyzuj rodzaj informacji który chcesz otrzymać',
+        description: 'Enter your login credentials and select the type of info you would like to receive',
         options: [
             {
                 name: 'login',
-                description: 'Twój login do Librusa, np. "340312u"',
+                description: 'Your Librus Synergia login, eg. "340312u"',
                 type: ApplicationCommandOptionType.String,
                 required: true
             },
             {
-                name: 'haslo',
-                description: 'Twoje hasło do Librusa',
+                name: 'password',
+                description: 'Your Librus Synergia password',
                 type: ApplicationCommandOptionType.String,
                 required: true
             },
             {
-                name: 'funkcja',
-                description: 'Wybierz rodzaj informacji jaki chcesz otrzymać od bota',
+                name: 'option',
+                description: 'Select the kind of information you would like to receive from the bot',
                 type: ApplicationCommandOptionType.String,
                 required: true,
                 choices: [
                     {
-                        name: 'Dane konta',
-                        value: 'dane-konta'
+                        name: 'Display account info',
+                        value: 'account-info'
                     },
+                    {
+                        name: 'Display the most recent announcement',
+                        value: 'announcement'
+                    }
                 ]
             }
         ]

@@ -22,27 +22,56 @@ client.on('interactionCreate', async (interaction) => {
 
     if (interaction.commandName = "librus") {
         const login = interaction.options.get('login').value
-        const haslo = interaction.options.get('haslo').value
-        const opcja = interaction.options.get('funkcja').value
+        const password = interaction.options.get('password').value
+        const option = interaction.options.get('option').value
 
-        librusClient.authorize(login, haslo).then( async () => {
-            if (opcja === "dane-konta") {
+        librusClient.authorize(login, password).then( async () => {
+            if (option === "account-data") {
+
                 try {
-                    const uczen = await librusClient.info.getAccountInfo()
-                    const uczenEmbed = new EmbedBuilder()
+                    const student = await librusClient.info.getAccountInfo()
+
+                    if (student.student.nameSurname === '') {
+                        interaction.reply({content: '⚠ Invalid login or password', ephemeral: true})
+                        return
+                    }
+
+                    const embed = new EmbedBuilder()
                         .setColor(0xeb0d66)
-                        .setTitle('Twoje dane')
+                        .setTitle('Your data')
                         .addFields(
-                            {name: 'Dane ucznia', value: `${uczen.student.nameSurname}, klasa ${uczen.student.class}`}
+                            {name: '👨‍🎓 Student data', value: `${uczen.student.nameSurname} \n ${uczen.student.class}`},
+                            {name: '🖥 Account data', value: `${uczen.account.nameSurname} \n ${uczen.account.login}`}
                         )
     
-                    interaction.reply({embeds: [uczenEmbed], ephemeral: true}, )
-                    delete login, haslo
+                    interaction.reply({embeds: [embed], ephemeral: true})
+                    /*
+                        These two variables need to be removed from the memory
+                        because otherwise if someone tries to log in with invalid
+                        data, they will receive info for the most recent valid login
+                    */
+                    delete login, password
                 } catch (err) {
-                    interaction.reply(
-                        `An error has occured: ${err}`
-                    )
+                    interaction.reply({content: `An error has occured: ${err}`, ephemeral: true})
                 }
+
+            } else if (option === 'announcement') {
+
+                try {
+                    librusClient.inbox.listAnnouncements().then((data) => {
+                        console.log(data)
+                        interaction.reply(
+                            {content: `
+                            **${data[0].title}**
+                            *👨‍💼 ${data[0].user} 📅 ${data[0].date}* \n
+                            ${data[0].content}
+                            `, ephemeral: true}
+                        )
+                    })
+                } catch (err) {
+                    interaction.reply({content: `An error has occured: ${err}`, ephemeral: true})
+                }
+
             }
         })
     }
